@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>core</module>
         <module>file-ingestor</module>
         <module>rules-evaluator</module>
         <module>backend</module>
@@ -26,6 +27,11 @@
             <artifactId>junit-jupiter</artifactId>
             <version>5.8.1</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>5.0.1</version>
         </dependency>
     </dependencies>
 

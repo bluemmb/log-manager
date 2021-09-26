@@ -6,8 +6,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="rules-evaluator" />
+        <module name="core" />
         <module name="backend" />
+        <module name="rules-evaluator" />
         <module name="file-ingestor" />
       </profile>
     </annotationProcessing>
