@@ -11,7 +11,7 @@ public class KafkaProducerProxy {
         this.kafkaProducer = kafkaProducer;
     }
 
-    public void sendToKafka(LogData logData) {
+    public void send(LogData logData) {
         ProducerRecord<String, LogData> producerRecord = new ProducerRecord<String, LogData>("test", logData.date.toString(), logData);
         kafkaProducer.send(producerRecord);
     }

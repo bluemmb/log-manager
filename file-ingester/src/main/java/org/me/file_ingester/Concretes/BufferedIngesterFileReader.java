@@ -27,7 +27,7 @@ public class BufferedIngesterFileReader extends IngesterFileReader {
             while ( (line = bufferedReader.readLine()) != null ) {
                 System.out.println("Ingester | Line : " + line);
                 LogData logData = lineProcessor.process(line);
-                kafkaProducerProxy.sendToKafka(logData);
+                kafkaProducerProxy.send(logData);
             }
         }
         catch (Exception e) {
