@@ -1,12 +1,18 @@
 package org.me.file_ingester.Concretes;
 
 import org.me.file_ingester.Abstracts.IngesterFileReader;
+import org.me.file_ingester.Abstracts.LineProcessor;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 public class BufferedIngesterFileReader extends IngesterFileReader {
+
+    public BufferedIngesterFileReader(LineProcessor lineProcessor) {
+        super(lineProcessor);
+    }
+
     @Override
     public void run() {
         System.out.println("Ingester | Started : " + path.getFileName());
@@ -18,7 +24,7 @@ public class BufferedIngesterFileReader extends IngesterFileReader {
 
             while ( (line = bufferedReader.readLine()) != null ) {
                 System.out.println("Ingester | Line : " + line);
-                // TODO: Process Line with Ingester class
+                lineProcessor.process(line);
             }
         }
         catch (Exception e) {
