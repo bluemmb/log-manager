@@ -5,9 +5,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.methvin.watcher.DirectoryWatcher;
+import org.me.file_ingester.Abstracts.IngesterFileReader;
 import org.me.file_ingester.Concretes.ExecutorServiceIngestersPool;
-import org.me.file_ingester.Concretes.FixedFormatIngester;
-import org.me.file_ingester.Abstracts.Ingester;
+import org.me.file_ingester.Concretes.BufferedIngesterFileReader;
 import org.me.file_ingester.Abstracts.IngestersPool;
 
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ public class Providers extends AbstractModule {
 
     @Inject
     @Provides
-    public Ingester providesIngester() {
-        return new FixedFormatIngester();
+    public IngesterFileReader providesIngesterFileReader() {
+        return new BufferedIngesterFileReader();
     }
 }

@@ -1,7 +1,7 @@
 package org.me.file_ingester.Concretes;
 
 import org.me.core.Container;
-import org.me.file_ingester.Abstracts.Ingester;
+import org.me.file_ingester.Abstracts.IngesterFileReader;
 import org.me.file_ingester.Abstracts.IngestersPool;
 
 import java.nio.file.Path;
@@ -42,8 +42,8 @@ public class ExecutorServiceIngestersPool extends IngestersPool {
 
     @Override
     public void addPath(Path path) {
-        Ingester ingester = Container.get(Ingester.class);
-        ingester.setPath(path);
-        executorService.submit(ingester);
+        IngesterFileReader ingesterFileReader = Container.get(IngesterFileReader.class);
+        ingesterFileReader.setPath(path);
+        executorService.submit(ingesterFileReader);
     }
 }
