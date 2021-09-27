@@ -1,25 +1,37 @@
 package org.me.file_ingester;
 
 import com.google.inject.Inject;
+import io.github.cdimascio.dotenv.Dotenv;
 import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.DirectoryWatcher;
 import org.me.file_ingester.Abstracts.IngestersPool;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 
 public class FileIngester {
 
+    private final Dotenv dotenv;
+
     private final DirectoryWatcher.Builder directoryWatcherBuilder;
     private DirectoryWatcher watcher;
+    private Date watcherStartDate;
 
     private final IngestersPool ingestersPool;
 
     @Inject
     public FileIngester(
+            Dotenv dotenv,
             DirectoryWatcher.Builder directoryWatcherBuilder,
             IngestersPool ingestersPool
         )
     {
+        this.dotenv = dotenv;
         this.directoryWatcherBuilder = directoryWatcherBuilder;
         this.ingestersPool = ingestersPool;
     }
@@ -28,6 +40,7 @@ public class FileIngester {
     public void run() throws IOException {
         startIngesters();
         startWatchingDirectory();
+        loadOldFiles();
 
         System.out.println("Enter something to finish App!");
         System.in.read();
@@ -59,6 +72,7 @@ public class FileIngester {
                 .build();
 
         watcher.watchAsync();
+        watcherStartDate = new Date();
         System.out.println("Watcher | Started");
     }
 
@@ -66,5 +80,22 @@ public class FileIngester {
     private void stopWatchingDirectory() throws IOException {
         watcher.close();
         System.out.println("Watcher | Closed");
+    }
+
+
+    private void loadOldFiles() {
+        File directory = new File( dotenv.get("FILE_INGESTER.LOGS_PATH") );
+
+        File[] files = directory.listFiles();
+        Arrays.sort(files, Comparator.comparingLong(File::lastModified));
+
+        for ( File file : files ) {
+            Date lastModified = new Date(file.lastModified());
+            if ( lastModified.compareTo(watcherStartDate) <= 0 ) {
+                System.out.println("OldFile | Add File : " + file.getAbsolutePath());
+                if ( ! ingestersPool.addPath(file.toPath()) )
+                    System.out.println("OldFile | File name is invalid : " + file.getAbsolutePath());
+            }
+        }
     }
 }
