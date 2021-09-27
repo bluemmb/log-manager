@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class FixedFormatLineProcessor extends LineProcessor {
 
-    private static final String regex = "^(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{3})\\s+\\[(\\w*)\\]\\s+(\\w+)\\s+([\\w.]+)\\s+\\-\\s+([^\\r\\n]+)$";
+    private static final String regex = "^(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{3})\\s+\\[([\\w\\-]*)\\]\\s+(\\w+)\\s+([\\w.]+)\\s*-\\s*([^\\r\\n]*)$";
 
     @Override
     public LogData process(String line) {
