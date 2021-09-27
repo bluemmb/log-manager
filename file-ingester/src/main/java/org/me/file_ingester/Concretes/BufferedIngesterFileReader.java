@@ -27,13 +27,15 @@ public class BufferedIngesterFileReader extends IngesterFileReader {
             while ( (line = bufferedReader.readLine()) != null ) {
                 System.out.println("Ingester | Line : " + line);
                 LogData logData = lineProcessor.process(line);
-                kafkaProducerProxy.send(filenameParts.componentName, logData);
+                String key = filenameParts.datetimeString + "--" + logData.date.getTime();
+                kafkaProducerProxy.send(filenameParts.componentName, key, logData);
             }
         }
         catch (Exception e) {
             System.out.println("Ingester | Error : " + e.getMessage());
         }
 
+        deleteFile();
         System.out.println("Ingester | Finished : " + path.getFileName());
     }
 }
