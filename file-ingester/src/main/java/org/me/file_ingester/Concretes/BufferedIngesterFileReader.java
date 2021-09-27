@@ -1,7 +1,7 @@
 package org.me.file_ingester.Concretes;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.me.core.DataObjects.LogData;
+import org.me.core.Proxies.KafkaProducerProxy;
 import org.me.file_ingester.Abstracts.IngesterFileReader;
 import org.me.file_ingester.Abstracts.LineProcessor;
 
@@ -11,8 +11,8 @@ import java.io.FileReader;
 
 public class BufferedIngesterFileReader extends IngesterFileReader {
 
-    public BufferedIngesterFileReader(LineProcessor lineProcessor, KafkaProducer<String, LogData> kafkaProducer) {
-        super(lineProcessor, kafkaProducer);
+    public BufferedIngesterFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
+        super(lineProcessor, kafkaProducerProxy);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BufferedIngesterFileReader extends IngesterFileReader {
             while ( (line = bufferedReader.readLine()) != null ) {
                 System.out.println("Ingester | Line : " + line);
                 LogData logData = lineProcessor.process(line);
-                sendToKafka(logData);
+                kafkaProducerProxy.sendToKafka(logData);
             }
         }
         catch (Exception e) {
