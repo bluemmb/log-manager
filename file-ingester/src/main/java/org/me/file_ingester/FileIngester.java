@@ -52,7 +52,8 @@ public class FileIngester {
                 .listener( event -> {
                     if ( event.eventType() == DirectoryChangeEvent.EventType.CREATE ) {
                         System.out.println("Watcher | New File : " + event.path());
-                        ingestersPool.addPath(event.path());
+                        if ( ! ingestersPool.addPath(event.path()) )
+                            System.out.println("Watcher | File name is invalid : " + event.path());
                     }
                 } )
                 .build();
