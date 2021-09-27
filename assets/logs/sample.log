@@ -1,0 +1,3 @@
+2021-07-12 01:22:42,114 [Thread1] INFO  package.name.ClassName - Message1
+2021-07-12 01:22:48,524 [Thread1] WARNING  package.name.ClassName2 - Message2 is ready
+2021-07-12 01:23:11,148 [Thread2] ERROR  package.name.ClassName.Subclass - Message3 is hard to say!
