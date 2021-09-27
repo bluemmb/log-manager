@@ -1,8 +1,8 @@
-package org.me.file_ingestor.Abstracts;
+package org.me.file_ingester.Abstracts;
 
 import java.nio.file.Path;
 
-public abstract class IngestorsPool {
+public abstract class IngestersPool {
     public abstract void start();
     public abstract void stop();
     public abstract void await();

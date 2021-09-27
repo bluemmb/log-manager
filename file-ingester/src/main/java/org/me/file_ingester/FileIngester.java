@@ -1,49 +1,49 @@
-package org.me.file_ingestor;
+package org.me.file_ingester;
 
 import com.google.inject.Inject;
 import io.methvin.watcher.DirectoryChangeEvent;
 import io.methvin.watcher.DirectoryWatcher;
-import org.me.file_ingestor.Abstracts.IngestorsPool;
+import org.me.file_ingester.Abstracts.IngestersPool;
 
 import java.io.IOException;
 
-public class FileIngestor {
+public class FileIngester {
 
     private final DirectoryWatcher.Builder directoryWatcherBuilder;
     private DirectoryWatcher watcher;
 
-    private final IngestorsPool ingestorsPool;
+    private final IngestersPool ingestersPool;
 
     @Inject
-    public FileIngestor(
+    public FileIngester(
             DirectoryWatcher.Builder directoryWatcherBuilder,
-            IngestorsPool ingestorsPool
+            IngestersPool ingestersPool
         )
     {
         this.directoryWatcherBuilder = directoryWatcherBuilder;
-        this.ingestorsPool = ingestorsPool;
+        this.ingestersPool = ingestersPool;
     }
 
 
     public void run() throws IOException {
-        startIngestors();
+        startIngesters();
         startWatchingDirectory();
 
         System.out.println("Enter something to finish App!");
         System.in.read();
 
         stopWatchingDirectory();
-        awaitIngestors();
+        awaitIngesters();
     }
 
 
-    private void startIngestors() {
-        ingestorsPool.start();
+    private void startIngesters() {
+        ingestersPool.start();
     }
 
 
-    private void awaitIngestors() {
-        ingestorsPool.await();
+    private void awaitIngesters() {
+        ingestersPool.await();
     }
 
 
@@ -52,7 +52,7 @@ public class FileIngestor {
                 .listener( event -> {
                     if ( event.eventType() == DirectoryChangeEvent.EventType.CREATE ) {
                         System.out.println("Watcher | New File : " + event.path());
-                        ingestorsPool.addPath(event.path());
+                        ingestersPool.addPath(event.path());
                     }
                 } )
                 .build();

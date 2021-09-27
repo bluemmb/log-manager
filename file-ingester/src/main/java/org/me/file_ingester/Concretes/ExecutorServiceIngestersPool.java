@@ -1,20 +1,20 @@
-package org.me.file_ingestor.Concretes;
+package org.me.file_ingester.Concretes;
 
 import org.me.core.Container;
-import org.me.file_ingestor.Abstracts.Ingestor;
-import org.me.file_ingestor.Abstracts.IngestorsPool;
+import org.me.file_ingester.Abstracts.Ingester;
+import org.me.file_ingester.Abstracts.IngestersPool;
 
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ExecutorServiceIngestorsPool extends IngestorsPool {
+public class ExecutorServiceIngestersPool extends IngestersPool {
 
     private final Integer numberOfThreads;
     private ExecutorService executorService;
 
-    public ExecutorServiceIngestorsPool(Integer numberOfThreads) {
+    public ExecutorServiceIngestersPool(Integer numberOfThreads) {
         this.numberOfThreads = numberOfThreads;
     }
 
@@ -42,8 +42,8 @@ public class ExecutorServiceIngestorsPool extends IngestorsPool {
 
     @Override
     public void addPath(Path path) {
-        Ingestor ingestor = Container.get(Ingestor.class);
-        ingestor.setPath(path);
-        executorService.submit(ingestor);
+        Ingester ingester = Container.get(Ingester.class);
+        ingester.setPath(path);
+        executorService.submit(ingester);
     }
 }

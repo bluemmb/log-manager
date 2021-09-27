@@ -1,8 +1,8 @@
-package org.me.file_ingestor.Abstracts;
+package org.me.file_ingester.Abstracts;
 
 import java.nio.file.Path;
 
-public abstract class Ingestor implements Runnable {
+public abstract class Ingester implements Runnable {
     protected Path path;
 
     public void setPath(Path path) {

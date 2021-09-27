@@ -1,5 +1,5 @@
 
-package org.me.file_ingestor;
+package org.me.file_ingester;
 
 import com.google.inject.AbstractModule;
 import org.me.core.Bootstrap;
@@ -14,8 +14,8 @@ public class Main implements AppStarter {
 
     public void start() {
         try {
-            FileIngestor fileIngestor = Container.get(FileIngestor.class);
-            fileIngestor.run();
+            FileIngester fileIngester = Container.get(FileIngester.class);
+            fileIngester.run();
         }
         catch ( IOException e ) {
             // TODO

@@ -9,7 +9,7 @@
         <module name="core" />
         <module name="backend" />
         <module name="rules-evaluator" />
-        <module name="file-ingestor" />
+        <module name="file-ingester" />
       </profile>
     </annotationProcessing>
   </component>
