@@ -1,4 +1,4 @@
-package org.me.file_ingester.DataObjects;
+package org.me.core.DataObjects;
 
 import java.util.Date;
 

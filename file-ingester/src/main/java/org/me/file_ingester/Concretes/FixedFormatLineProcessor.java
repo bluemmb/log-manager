@@ -1,7 +1,7 @@
 package org.me.file_ingester.Concretes;
 
 import org.me.file_ingester.Abstracts.LineProcessor;
-import org.me.file_ingester.DataObjects.LogData;
+import org.me.core.DataObjects.LogData;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
