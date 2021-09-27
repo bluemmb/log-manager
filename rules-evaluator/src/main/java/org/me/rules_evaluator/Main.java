@@ -17,7 +17,7 @@ public class Main implements AppStarter {
             rulesEvaluator.run();
         }
         catch ( Exception e ) {
-            // TODO
+            System.out.println("ERROR : " + e.toString());
         }
     }
 

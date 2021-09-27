@@ -6,7 +6,6 @@ import org.me.core.Bootstrap;
 import org.me.core.Container;
 import org.me.core.Interfaces.AppStarter;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +16,8 @@ public class Main implements AppStarter {
             FileIngester fileIngester = Container.get(FileIngester.class);
             fileIngester.run();
         }
-        catch ( IOException e ) {
-            // TODO
+        catch ( Exception e ) {
+            System.out.println("ERROR : " + e.toString());
         }
     }
 
