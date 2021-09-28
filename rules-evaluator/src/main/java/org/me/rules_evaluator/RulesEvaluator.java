@@ -12,7 +12,24 @@ public class RulesEvaluator {
         this.dotenv = dotenv;
     }
 
-    public void run() {
-        System.out.print("RulesEvaluator Hello!");
+    public void run() throws Exception {
+        initializeDataCollector();
+        startLogReaders();
+        startRulesCheckers();
+
+        System.out.println("Enter something to finish App!");
+        System.in.read();
+    }
+
+    private void initializeDataCollector() {
+        // ...
+    }
+
+    private void startLogReaders() {
+        // ...
+    }
+
+    private void startRulesCheckers() {
+        // ...
     }
 }
