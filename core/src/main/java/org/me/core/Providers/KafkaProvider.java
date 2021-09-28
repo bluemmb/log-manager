@@ -14,6 +14,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.me.core.DataObjects.LogData;
 import org.me.core.DataObjects.LogDataDeserializer;
 import org.me.core.DataObjects.LogDataSerializer;
+import org.me.core.DataObjects.LogDataTypePartitioner;
 import org.me.core.Proxies.KafkaConsumerProxy;
 import org.me.core.Proxies.KafkaProducerProxy;
 
@@ -29,6 +30,7 @@ public class KafkaProvider extends AbstractModule {
         props.put(ProducerConfig.CLIENT_ID_CONFIG, dotenv.get("KAFKA.CLIENT_ID"));
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, LogDataSerializer.class.getName());
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, LogDataTypePartitioner.class.getName());
         return new KafkaProducer<String, LogData>(props);
     }
 

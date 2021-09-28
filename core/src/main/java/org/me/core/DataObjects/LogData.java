@@ -6,14 +6,14 @@ import java.util.Objects;
 public class LogData {
     public Date date;
     public String threadName;
-    public String type;
+    public LogDataType type;
     public String className;
     public String message;
 
     public LogData(Date date, String threadName, String type, String className, String message) {
         this.date = date;
         this.threadName = threadName;
-        this.type = type;
+        this.type = LogDataType.valueOf(type);
         this.className = className;
         this.message = message;
     }
