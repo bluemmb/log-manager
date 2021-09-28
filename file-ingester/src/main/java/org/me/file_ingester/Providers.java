@@ -6,12 +6,12 @@ import com.google.inject.Provides;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.methvin.watcher.DirectoryWatcher;
 import org.me.core.Proxies.KafkaProducerProxy;
-import org.me.file_ingester.Abstracts.IngesterFileReader;
-import org.me.file_ingester.Abstracts.LineProcessor;
-import org.me.file_ingester.Concretes.ExecutorServiceIngestersPool;
-import org.me.file_ingester.Concretes.BufferedIngesterFileReader;
-import org.me.file_ingester.Abstracts.IngestersPool;
-import org.me.file_ingester.Concretes.FixedFormatLineProcessor;
+import org.me.file_ingester.FileReader.FileReader;
+import org.me.file_ingester.LineProcessor.LineProcessor;
+import org.me.file_ingester.ThreadsPool.ExecutorServiceThreadsPool;
+import org.me.file_ingester.FileReader.BufferedFileReader;
+import org.me.file_ingester.ThreadsPool.ThreadsPool;
+import org.me.file_ingester.LineProcessor.FixedFormatLineProcessor;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,15 +26,15 @@ public class Providers extends AbstractModule {
 
     @Inject
     @Provides
-    public IngestersPool provideIngestersPool(Dotenv dotenv) {
+    public ThreadsPool providesThreadsPool(Dotenv dotenv) {
         Integer numberOfThreads = Integer.parseInt( dotenv.get("FILE_INGESTER.POOL.THREADS") );
-        return new ExecutorServiceIngestersPool(numberOfThreads);
+        return new ExecutorServiceThreadsPool(numberOfThreads);
     }
 
     @Inject
     @Provides
-    public IngesterFileReader providesIngesterFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
-        return new BufferedIngesterFileReader(lineProcessor, kafkaProducerProxy);
+    public FileReader providesFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
+        return new BufferedFileReader(lineProcessor, kafkaProducerProxy);
     }
 
     @Provides

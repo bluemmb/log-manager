@@ -1,23 +1,21 @@
-package org.me.file_ingester.Concretes;
+package org.me.file_ingester.FileReader;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 import org.me.core.Proxies.KafkaProducerProxy;
-import org.me.file_ingester.Abstracts.IngesterFileReader;
-import org.me.file_ingester.Abstracts.LineProcessor;
+import org.me.file_ingester.LineProcessor.LineProcessor;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class BufferedIngesterFileReader extends IngesterFileReader {
+public class BufferedFileReader extends FileReader {
 
-    public BufferedIngesterFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
+    public BufferedFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
         super(lineProcessor, kafkaProducerProxy);
     }
 
@@ -26,7 +24,7 @@ public class BufferedIngesterFileReader extends IngesterFileReader {
         System.out.println("Ingester | Started : " + path.getFileName());
 
         File file = path.toFile();
-        try ( BufferedReader bufferedReader = new BufferedReader( new FileReader(file) ) )
+        try ( BufferedReader bufferedReader = new BufferedReader( new java.io.FileReader(file) ) )
         {
             String line;
             List<Future<?>> futures = new ArrayList<>();

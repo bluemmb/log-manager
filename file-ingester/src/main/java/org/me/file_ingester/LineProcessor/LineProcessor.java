@@ -1,4 +1,4 @@
-package org.me.file_ingester.Abstracts;
+package org.me.file_ingester.LineProcessor;
 
 import org.me.core.DataObjects.LogData;
 

@@ -1,10 +1,10 @@
-package org.me.file_ingester.Abstracts;
+package org.me.file_ingester.ThreadsPool;
 
 import org.me.file_ingester.DataObjects.FilenameParts;
 
 import java.nio.file.Path;
 
-public abstract class IngestersPool {
+public abstract class ThreadsPool {
     public abstract void start();
     public abstract void stop();
     public abstract void await();

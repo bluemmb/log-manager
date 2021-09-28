@@ -1,8 +1,7 @@
-package org.me.file_ingester.Concretes;
+package org.me.file_ingester.ThreadsPool;
 
 import org.me.core.Container;
-import org.me.file_ingester.Abstracts.IngesterFileReader;
-import org.me.file_ingester.Abstracts.IngestersPool;
+import org.me.file_ingester.FileReader.FileReader;
 import org.me.file_ingester.DataObjects.FilenameParts;
 
 import java.nio.file.Path;
@@ -10,12 +9,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class ExecutorServiceIngestersPool extends IngestersPool {
+public class ExecutorServiceThreadsPool extends ThreadsPool {
 
     private final Integer numberOfThreads;
     private ExecutorService executorService;
 
-    public ExecutorServiceIngestersPool(Integer numberOfThreads) {
+    public ExecutorServiceThreadsPool(Integer numberOfThreads) {
         this.numberOfThreads = numberOfThreads;
     }
 
@@ -47,10 +46,10 @@ public class ExecutorServiceIngestersPool extends IngestersPool {
         if ( filenameParts == null )
             return false;
 
-        IngesterFileReader ingesterFileReader = Container.get(IngesterFileReader.class);
-        ingesterFileReader.setPath(path);
-        ingesterFileReader.setFilenameParts(filenameParts);
-        executorService.submit(ingesterFileReader);
+        FileReader fileReader = Container.get(FileReader.class);
+        fileReader.setPath(path);
+        fileReader.setFilenameParts(filenameParts);
+        executorService.submit(fileReader);
         return true;
     }
 }

@@ -1,11 +1,10 @@
 package org.me.file_ingestor;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.me.core.DataObjects.LogData;
-import org.me.file_ingester.Concretes.FixedFormatLineProcessor;
+import org.me.file_ingester.LineProcessor.FixedFormatLineProcessor;
 
 import java.util.Date;
 import java.util.stream.Stream;
