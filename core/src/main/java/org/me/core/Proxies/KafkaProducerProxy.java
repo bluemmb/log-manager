@@ -2,7 +2,10 @@ package org.me.core.Proxies;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.me.core.DataObjects.LogData;
+
+import java.util.concurrent.Future;
 
 public class KafkaProducerProxy {
     private KafkaProducer<String, LogData> kafkaProducer;
@@ -11,15 +14,16 @@ public class KafkaProducerProxy {
         this.kafkaProducer = kafkaProducer;
     }
 
-    public void send(String topic, String key, LogData logData) {
+    public Future<RecordMetadata> send(String topic, String key, LogData logData) {
         ProducerRecord<String, LogData> producerRecord = new ProducerRecord<String, LogData>(
                 topic, key, logData
         );
         try {
-            kafkaProducer.send(producerRecord);
+            return kafkaProducer.send(producerRecord);
         }
         catch ( Exception e ) {
             System.out.println(e.getMessage());
+            return null;
         }
     }
 }
