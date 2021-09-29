@@ -25,6 +25,8 @@ public class KafkaConsumerProxy {
         Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, dotenv.get("KAFKA.BROKERS"));
         props.put(ConsumerConfig.GROUP_ID_CONFIG, topic + "-consumer-group");
+        props.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, false);
+        props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LogDataDeserializer.class.getName());
 
@@ -36,5 +38,9 @@ public class KafkaConsumerProxy {
 
     public ConsumerRecords<String, LogData> poll(int duration) {
         return kafkaConsumer.poll(duration);
+    }
+
+    public void commitSync() {
+        kafkaConsumer.commitSync();
     }
 }
