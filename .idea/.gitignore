@@ -9,3 +9,5 @@
 
 # Customs
 /uiDesigner.xml
+/dataSources.xml
+/sqldialects.xml
