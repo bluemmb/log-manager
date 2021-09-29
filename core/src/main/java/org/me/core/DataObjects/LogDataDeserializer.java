@@ -4,20 +4,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
 
+import java.text.SimpleDateFormat;
+
 public class LogDataDeserializer implements Deserializer<LogData> {
 
     @Override
     public LogData deserialize(String topic, byte[] data) {
+        LogData object = null;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
+        objectMapper.setDateFormat(dateFormat);
+
         try {
-            if (data == null) {
-                System.out.println("Null received at deserializing");
-                return null;
-            }
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(new String(data), LogData.class);
+            object = objectMapper.readerFor(LogData.class).readValue(data);
+        } catch (Exception exception) {
+            System.out.println("Error in deserializing bytes "+ exception);
         }
-        catch (Exception e) {
-            throw new SerializationException("Error when deserializing byte[] to LogData");
-        }
+
+        return object;
     }
 }

@@ -1,5 +1,7 @@
 package org.me.core.DataObjects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 import java.util.Objects;
 
@@ -10,7 +12,13 @@ public class LogData {
     public String className;
     public String message;
 
-    public LogData(Date date, String threadName, String type, String className, String message) {
+    public LogData(
+            @JsonProperty("date") Date date,
+            @JsonProperty("threadName") String threadName,
+            @JsonProperty("type") String type,
+            @JsonProperty("className") String className,
+            @JsonProperty("message") String message
+    ) {
         this.date = date;
         this.threadName = threadName;
         this.type = LogDataType.valueOf(type);

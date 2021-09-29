@@ -2,6 +2,7 @@ package org.me.core.Proxies;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.me.core.Container;
@@ -31,5 +32,9 @@ public class KafkaConsumerProxy {
         kafkaConsumer.subscribe(Collections.singletonList(topic));
 
         return new KafkaConsumerProxy(kafkaConsumer);
+    }
+
+    public ConsumerRecords<String, LogData> poll(int duration) {
+        return kafkaConsumer.poll(duration);
     }
 }
