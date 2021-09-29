@@ -13,23 +13,23 @@ public class RulesEvaluator {
     }
 
     public void run() throws Exception {
-        initializeDataCollector();
-        startLogReaders();
-        startRulesCheckers();
+        initializeDataAggregator();
+        startKafkaReaders();
+        startRulesChecker();
 
         System.out.println("Enter something to finish App!");
         System.in.read();
     }
 
-    private void initializeDataCollector() {
+    private void initializeDataAggregator() {
         // ...
     }
 
-    private void startLogReaders() {
+    private void startKafkaReaders() {
         // ...
     }
 
-    private void startRulesCheckers() {
+    private void startRulesChecker() {
         // ...
     }
 }
