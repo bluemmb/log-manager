@@ -48,7 +48,7 @@ public class KafkaReader implements Runnable {
     }
 
     private void storeLogData(String key, LogData logData) throws SQLException {
-        // TODO: Use models
+        // TODO: Batch Insert
         PreparedStatement prepareStatement = mysqlConnection.prepareStatement(
                 "insert into logs (`key`, `component`, `logdatetime`, `type`, `threadName`, `className`, `message`, `created_at`)" +
                         " values (?, ?, ?, ?, ?, ?, ?, ?)" +
