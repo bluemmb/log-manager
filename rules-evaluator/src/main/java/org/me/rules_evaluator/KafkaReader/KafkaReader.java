@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.text.SimpleDateFormat;
 
 public class KafkaReader implements Runnable {
 
@@ -54,16 +55,18 @@ public class KafkaReader implements Runnable {
                             "values (?, ?, ?, ?, ?, ?, ?, ?);"
             );
 
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
             prepareStatement.setString(1, key);
             prepareStatement.setString(2, component);
 
-            prepareStatement.setDate(3, new java.sql.Date(logData.date.getTime()));
+            prepareStatement.setString(3, dateFormat.format(logData.date));
             prepareStatement.setString(4, logData.type.toString());
             prepareStatement.setString(5, logData.threadName);
             prepareStatement.setString(6, logData.className);
             prepareStatement.setString(7, logData.message);
 
-            prepareStatement.setDate(8, new java.sql.Date((new java.util.Date()).getTime()));
+            prepareStatement.setString(8, dateFormat.format(new java.util.Date()));
 
             prepareStatement.executeUpdate();
         }
