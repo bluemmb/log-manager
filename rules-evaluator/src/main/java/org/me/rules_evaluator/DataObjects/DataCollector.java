@@ -3,6 +3,7 @@ package org.me.rules_evaluator.DataObjects;
 import org.me.core.DataObjects.LogData;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DataCollector {
     //            HashMap<component, HashMap<LogType, Data>>
@@ -23,6 +24,9 @@ public class DataCollector {
 
     private Data locateData(String component, String type)
     {
+        component = component.toLowerCase();
+        type = type.toLowerCase();
+
         if ( ! database.containsKey(component) )
             database.put(component, new HashMap<>());
         HashMap<String, Data> componentData = database.get(component);
