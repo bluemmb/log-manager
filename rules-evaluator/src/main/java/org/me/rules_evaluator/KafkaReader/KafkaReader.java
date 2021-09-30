@@ -6,24 +6,22 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 import org.me.core.Services.KafkaConsumerService;
+import org.me.core.Services.MysqlService;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.text.SimpleDateFormat;
 
 public class KafkaReader implements Runnable {
 
     private final String component;
     private final Dotenv dotenv;
     private final KafkaConsumerService kafkaConsumerService;
-    private final Connection mysqlConnection;
+    private final MysqlService mysqlService;
 
     public KafkaReader(String component) {
         this.component = component;
         this.dotenv = Container.get(Dotenv.class);
         this.kafkaConsumerService = KafkaConsumerService.factory(component);
-        this.mysqlConnection = Container.get(Connection.class);
+        this.mysqlService = Container.get(MysqlService.class);
     }
 
     @Override
@@ -34,7 +32,7 @@ public class KafkaReader implements Runnable {
             try {
                 for ( ConsumerRecord<String, LogData> record : records ) {
                     System.out.println(record.key());
-                    storeLogData(record.key(), record.value());
+                    mysqlService.storeLogData(component, record.key(), record.value());
                 }
                 kafkaConsumerService.commitSync();
             }
@@ -45,29 +43,5 @@ public class KafkaReader implements Runnable {
                 System.out.println("Database Error : " + e.getMessage());
             }
         }
-    }
-
-    private void storeLogData(String key, LogData logData) throws SQLException {
-        // TODO: Batch Insert
-        PreparedStatement prepareStatement = mysqlConnection.prepareStatement(
-                "insert into logs (`key`, `component`, `logdatetime`, `type`, `threadName`, `className`, `message`, `created_at`)" +
-                        " values (?, ?, ?, ?, ?, ?, ?, ?)" +
-                        " on duplicate key update `key`=`key`;"
-        );
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-        prepareStatement.setString(1, key);
-        prepareStatement.setString(2, component);
-
-        prepareStatement.setString(3, dateFormat.format(logData.date));
-        prepareStatement.setString(4, logData.type.toString());
-        prepareStatement.setString(5, logData.threadName);
-        prepareStatement.setString(6, logData.className);
-        prepareStatement.setString(7, logData.message);
-
-        prepareStatement.setString(8, dateFormat.format(new java.util.Date()));
-
-        prepareStatement.executeUpdate();
     }
 }

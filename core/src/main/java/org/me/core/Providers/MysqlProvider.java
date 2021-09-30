@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import io.github.cdimascio.dotenv.Dotenv;
+import org.me.core.Services.MysqlService;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,5 +25,12 @@ public class MysqlProvider extends AbstractModule {
 
         String connectionString = String.format("jdbc:mysql://%s:%s/%s", host, port, database);
         return DriverManager.getConnection(connectionString, username, password);
+    }
+
+    @Inject
+    @Provides
+    @Singleton
+    public MysqlService providesMysqlService(Connection connection) {
+        return new MysqlService(connection);
     }
 }
