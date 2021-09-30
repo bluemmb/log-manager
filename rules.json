@@ -1,0 +1,46 @@
+{
+  "rules": [
+    {
+      "name": "ErrorLog",
+      "for": "line",
+      "on": {
+        "component": "*",
+        "type": "ERROR"
+      }
+    },
+
+    {
+      "name": "CriticalLog",
+      "for": "line",
+      "on": {
+        "component": "*",
+        "type": "CRITICAL"
+      }
+    },
+
+    {
+      "name": "TooManyLogsOfType",
+      "for": "type",
+      "rate": {
+        "interval": 5,
+        "max": 10
+      },
+      "on": {
+        "component": "*",
+        "type": "*"
+      }
+    },
+
+    {
+      "name": "TooManyLogsOfComponent",
+      "for": "component",
+      "rate": {
+        "interval": 2,
+        "max": 100
+      },
+      "on": {
+        "component": "*"
+      }
+    }
+  ]
+}
