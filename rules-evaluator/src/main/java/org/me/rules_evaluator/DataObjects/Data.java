@@ -5,10 +5,8 @@ import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 public class Data {
     private static final int keepMaxMinutes;
@@ -22,18 +20,17 @@ public class Data {
 
     //            TreeMap<Minute, Count  >
     private final TreeMap<String, Integer> counter;
-
-    //            TreeMap<Time  , Message>
-    private final TreeMap<Long  , String > lastMessages;
+    private final FixedSizeStack lastMessages;
+    private Date latestDate;
 
     public Data() {
         this.counter = new TreeMap<>();
-        this.lastMessages = new TreeMap<>(Collections.reverseOrder());
+        this.lastMessages = new FixedSizeStack(keepMaxMessages);
     }
 
     public void add(LogData logData)
     {
-        if ( isTooOld(logData.date) )
+        if ( isOld(logData.date) )
             return;
 
         // Add to counter
@@ -41,17 +38,17 @@ public class Data {
         counter.merge(key, 1, Integer::sum);
 
         // Add to lastMessages
-        lastMessages.put(logData.date.getTime(), logData.message);
-        if ( lastMessages.size() > keepMaxMessages )
-            lastMessages.pollLastEntry();
+        lastMessages.push(logData.message);
+
+        // Update latestDate
+        latestDate = logData.date;
     }
 
 
-    private boolean isTooOld(Date date) {
-        Date now = new Date();
-        long diff = now.getTime() - date.getTime();
-        long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(diff);
-        return diffInMinutes > keepMaxMinutes;
+    private boolean isOld(Date date) {
+        if ( latestDate == null )
+            return false;
+        return date.compareTo(latestDate) <= 0;
     }
 
 

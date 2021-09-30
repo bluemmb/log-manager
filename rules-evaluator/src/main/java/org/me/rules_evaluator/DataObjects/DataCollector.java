@@ -3,7 +3,6 @@ package org.me.rules_evaluator.DataObjects;
 import org.me.core.DataObjects.LogData;
 
 import java.util.HashMap;
-import java.util.Locale;
 
 public class DataCollector {
     //            HashMap<component, HashMap<LogType, Data>>
