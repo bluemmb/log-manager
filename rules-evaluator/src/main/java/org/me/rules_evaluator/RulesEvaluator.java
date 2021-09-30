@@ -1,41 +1,37 @@
 package org.me.rules_evaluator;
 
 import com.google.inject.Inject;
-import io.github.cdimascio.dotenv.Dotenv;
 import org.me.rules_evaluator.KafkaReader.KafkaReader;
 import org.me.rules_evaluator.RulesChecker.RulesChecker;
-import org.me.rules_evaluator.RulesChecker.RulesConfig;
 
 import java.util.Timer;
 
 public class RulesEvaluator {
 
-    private final Dotenv dotenv;
-    private final RulesConfig rulesConfig;
+    private final KafkaReader kafkaReader;
+    private final RulesChecker rulesChecker;
 
     @Inject
-    public RulesEvaluator(Dotenv dotenv, RulesConfig rulesConfig) {
-        this.dotenv = dotenv;
-        this.rulesConfig = rulesConfig;
+    public RulesEvaluator(KafkaReader kafkaReader, RulesChecker rulesChecker) {
+        this.kafkaReader = kafkaReader;
+        this.rulesChecker = rulesChecker;
     }
 
     public void run() throws Exception {
-        startKafkaReaders();
+        startKafkaReader();
         startRulesChecker();
 
         System.out.println("Enter something to finish App!");
         System.in.read();
     }
 
-    private void startKafkaReaders() {
-        KafkaReader kafkaReader = new KafkaReader();
+    private void startKafkaReader() {
         Thread thread = new Thread(kafkaReader);
         thread.start();
     }
 
     private void startRulesChecker() {
-        RulesChecker rulesChecker = new RulesChecker(rulesConfig);
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(rulesChecker, 60*1000, 60*1000);
+        timer.scheduleAtFixedRate(rulesChecker, 1000, 1000);
     }
 }

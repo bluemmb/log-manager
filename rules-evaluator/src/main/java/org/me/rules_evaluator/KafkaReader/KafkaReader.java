@@ -1,9 +1,9 @@
 package org.me.rules_evaluator.KafkaReader;
 
+import com.google.inject.Inject;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 import org.me.core.Services.KafkaConsumerService;
 import org.me.rules_evaluator.DataObjects.DataCollector;
@@ -14,10 +14,11 @@ public class KafkaReader implements Runnable {
     private final KafkaConsumerService kafkaConsumerService;
     private final DataCollector dataCollector;
 
-    public KafkaReader() {
-        this.dotenv = Container.get(Dotenv.class);
-        this.kafkaConsumerService = Container.get(KafkaConsumerService.class);
-        this.dataCollector = new DataCollector();
+    @Inject
+    public KafkaReader(Dotenv dotenv, KafkaConsumerService kafkaConsumerService, DataCollector dataCollector) {
+        this.dotenv = dotenv;
+        this.kafkaConsumerService = kafkaConsumerService;
+        this.dataCollector = dataCollector;
     }
 
     @Override
