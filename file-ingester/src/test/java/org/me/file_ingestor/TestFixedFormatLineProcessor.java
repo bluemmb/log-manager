@@ -15,25 +15,28 @@ public class TestFixedFormatLineProcessor {
 
     @ParameterizedTest
     @MethodSource("paramsProcessResultParts")
-    public void testProcessResultParts(String line, LogData logDataExpected) {
+    public void testProcessResultParts(String componentName, String line, LogData logDataExpected) {
         FixedFormatLineProcessor fixedFormatLineProcessor = new FixedFormatLineProcessor();
-        LogData logData = fixedFormatLineProcessor.process(line);
+        LogData logData = fixedFormatLineProcessor.process(componentName, line);
         assertEquals(logData, logDataExpected);
     }
 
     static Stream<Arguments> paramsProcessResultParts() {
         return Stream.of(
                 Arguments.arguments(
+                        "java",
                         "2021-07-12 01:22:42,114 [ThreadName] INFO package.name.ClassName - msg",
-                        new LogData( new Date(1626036762114L), "ThreadName", "INFO", "package.name.ClassName", "msg" )
+                        new LogData( "java", new Date(1626036762114L), "ThreadName", "INFO", "package.name.ClassName", "msg" )
                 ),
                 Arguments.arguments(
+                        "java",
                         "2021-07-12 01:22:42,200   [T-1] WARN package.name.Class_Name.Subclass -   Hard To Grasp !!!!! YES  ",
-                        new LogData( new Date(1626036762200L), "T-1", "WARN", "package.name.Class_Name.Subclass", "Hard To Grasp !!!!! YES" )
+                        new LogData( "java", new Date(1626036762200L), "T-1", "WARN", "package.name.Class_Name.Subclass", "Hard To Grasp !!!!! YES" )
                 ),
                 Arguments.arguments(
+                        "java",
                         "2021-07-12 01:22:42,200   [App.T-1_2]   ERROR     package.name.Class_Name.Subclass -",
-                        new LogData( new Date(1626036762200L), "App.T-1_2", "ERROR", "package.name.Class_Name.Subclass", "" )
+                        new LogData( "java", new Date(1626036762200L), "App.T-1_2", "ERROR", "package.name.Class_Name.Subclass", "" )
                 )
         );
     }

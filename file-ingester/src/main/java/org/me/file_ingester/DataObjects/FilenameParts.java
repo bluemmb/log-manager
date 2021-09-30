@@ -11,11 +11,9 @@ import java.util.regex.Pattern;
 
 public class FilenameParts {
     private static final String regex = "^(\\w+)\\-(\\d{4}_\\d{2}_\\d{2}\\-\\d{2}_\\d{2}_\\d{2})\\.log$";
-    private static final List<String> validComponentNames;
 
     static {
         Dotenv dotenv = Container.get(Dotenv.class);
-        validComponentNames = Arrays.asList(dotenv.get("COMPONENTS").split(","));
     }
 
     public String componentName;
@@ -38,9 +36,6 @@ public class FilenameParts {
 
         String componentName = matcher.group(1);
         String datetimeString = matcher.group(2);
-
-        if ( ! validComponentNames.contains(componentName) )
-            return null;
 
         return new FilenameParts(componentName, datetimeString);
     }

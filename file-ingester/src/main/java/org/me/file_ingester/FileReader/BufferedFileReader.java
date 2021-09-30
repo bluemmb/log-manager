@@ -35,10 +35,10 @@ public class BufferedFileReader extends FileReader {
                 if ( line.length() == 0 ) continue;
                 // System.out.println("Ingester | Line : " + line);
 
-                LogData logData = lineProcessor.process(line);
+                LogData logData = lineProcessor.process(filenameParts.componentName, line);
                 String key = filenameParts.datetimeString + "--" + logData.date.getTime();
 
-                Future<?> future = kafkaProducerService.send(filenameParts.componentName, key, logData);
+                Future<?> future = kafkaProducerService.send(key, logData);
                 futures.add(future);
             }
 

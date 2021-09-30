@@ -10,15 +10,13 @@ import org.me.rules_evaluator.DataObjects.DataCollector;
 
 public class KafkaReader implements Runnable {
 
-    private final String component;
     private final Dotenv dotenv;
     private final KafkaConsumerService kafkaConsumerService;
     private final DataCollector dataCollector;
 
-    public KafkaReader(String component) {
-        this.component = component;
+    public KafkaReader() {
         this.dotenv = Container.get(Dotenv.class);
-        this.kafkaConsumerService = KafkaConsumerService.factory(component);
+        this.kafkaConsumerService = Container.get(KafkaConsumerService.class);
         this.dataCollector = new DataCollector();
     }
 
@@ -29,7 +27,7 @@ public class KafkaReader implements Runnable {
             ConsumerRecords<String, LogData> records = kafkaConsumerService.poll(pollSize);
             for ( ConsumerRecord<String, LogData> record : records ) {
                 System.out.println(record.key());
-                dataCollector.add(component, record.value());
+                dataCollector.add(record.value());
             }
             kafkaConsumerService.commitSync();
         }

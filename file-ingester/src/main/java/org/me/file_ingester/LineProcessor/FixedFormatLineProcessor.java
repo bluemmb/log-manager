@@ -12,7 +12,7 @@ public class FixedFormatLineProcessor extends LineProcessor {
     private static final String regex = "^(\\d{4}-\\d{2}-\\d{2}\\s\\d{2}:\\d{2}:\\d{2},\\d{3})\\s+\\[([\\w\\-\\.]*)\\]\\s+(\\w+)\\s+([\\w.]+)\\s*-\\s*([^\\r\\n]*)$";
 
     @Override
-    public LogData process(String line) {
+    public LogData process(String componentName, String line) {
         final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.UNICODE_CHARACTER_CLASS);
         final Matcher matcher = pattern.matcher(line);
 
@@ -28,7 +28,7 @@ public class FixedFormatLineProcessor extends LineProcessor {
             Date date = dateFormatter.parse(matcher.group(1));
             String message = matcher.group(5).trim();
 
-            logData = new LogData(date, matcher.group(2), matcher.group(3), matcher.group(4), message);
+            logData = new LogData(componentName, date, matcher.group(2), matcher.group(3), matcher.group(4), message);
         }
         catch ( Exception e ) {
             return null;

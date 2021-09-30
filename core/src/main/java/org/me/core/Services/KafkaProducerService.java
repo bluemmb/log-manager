@@ -9,12 +9,14 @@ import java.util.concurrent.Future;
 
 public class KafkaProducerService {
     private KafkaProducer<String, LogData> kafkaProducer;
+    private String topic;
 
-    public KafkaProducerService(KafkaProducer<String, LogData> kafkaProducer) {
+    public KafkaProducerService(KafkaProducer<String, LogData> kafkaProducer, String topic) {
         this.kafkaProducer = kafkaProducer;
+        this.topic = topic;
     }
 
-    public Future<RecordMetadata> send(String topic, String key, LogData logData) {
+    public Future<RecordMetadata> send(String key, LogData logData) {
         ProducerRecord<String, LogData> producerRecord = new ProducerRecord<String, LogData>(
                 topic, key, logData
         );
