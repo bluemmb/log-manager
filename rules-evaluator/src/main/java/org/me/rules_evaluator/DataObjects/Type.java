@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TreeMap;
 
-public class Data {
+public class Type {
     private static final int keepMaxMinutes;
     private static final int keepMaxMessages;
 
@@ -19,11 +19,11 @@ public class Data {
     }
 
     //            TreeMap<Minute, Count  >
-    private final TreeMap<String, Integer> counter;
+    public final TreeMap<String, Integer> counter;
     private final FixedSizeStack lastMessages;
     private Date latestDate;
 
-    public Data() {
+    public Type() {
         this.counter = new TreeMap<>();
         this.lastMessages = new FixedSizeStack(keepMaxMessages);
     }

@@ -3,37 +3,21 @@ package org.me.rules_evaluator.DataObjects;
 import org.me.core.DataObjects.LogData;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class DataCollector {
-    //            HashMap<component, HashMap<LogType, Data>>
-    private final HashMap<String   , HashMap<String , Data>> database;
 
+    private final Map<String, Component> components;
 
     public DataCollector() {
-        this.database = new HashMap<>();
+        this.components = new HashMap<>();
     }
-
 
     public void add(LogData logData)
     {
-        Data data = locateData(logData.componentName, logData.type);
-        data.add(logData);
-    }
+        if ( ! components.containsKey(logData.componentName) )
+            components.put(logData.componentName, new Component());
 
-
-    private Data locateData(String component, String type)
-    {
-        component = component.toLowerCase();
-        type = type.toLowerCase();
-
-        if ( ! database.containsKey(component) )
-            database.put(component, new HashMap<>());
-        HashMap<String, Data> componentData = database.get(component);
-
-        if ( ! componentData.containsKey(type) )
-            componentData.put(type, new Data());
-        Data data = componentData.get(type);
-
-        return data;
+        components.get(logData.componentName).add(logData);
     }
 }
