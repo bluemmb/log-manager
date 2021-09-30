@@ -20,6 +20,9 @@ public class RuleWhere {
     }
 
     private List<String> listFromString(String string) {
+        if ( string == null )
+            return new ArrayList<>();
+
         String[] array = string.split(",");
         List<String> list = new ArrayList<>();
         for ( String s : array ) list.add( s.trim().toLowerCase() );

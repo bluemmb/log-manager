@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
+import org.me.core.Services.MysqlService;
 import org.me.rules_evaluator.DataObjects.DataCollector;
 import org.me.rules_evaluator.RulesChecker.Rule.Rule;
 import org.me.rules_evaluator.RulesChecker.Rule.RuleLevelEnum;
@@ -22,11 +23,13 @@ public class RulesChecker extends TimerTask {
 
     private final RulesConfig rulesConfig;
     private final DataCollector dataCollector;
+    private final MysqlService mysqlService;
 
     @Inject
-    public RulesChecker(RulesConfig rulesConfig, DataCollector dataCollector) {
+    public RulesChecker(RulesConfig rulesConfig, DataCollector dataCollector, MysqlService mysqlService) {
         this.rulesConfig = rulesConfig;
         this.dataCollector = dataCollector;
+        this.mysqlService = mysqlService;
     }
 
     @Override
@@ -36,20 +39,15 @@ public class RulesChecker extends TimerTask {
         Set<String> components = r.report.keySet();
         for ( String componentName : components )
         {
-            checkComponentLevel(r, componentName);
             Set<String> types = r.report.get(componentName).keySet();
             for ( String typeName : types ) {
                 checkTypeLevel(r, componentName, typeName);
             }
+            checkComponentLevel(r, componentName);
         }
     }
 
     public void checkLineLevel(String component, String type, LogData logData) {
-        System.out.println("RulesChecker | Got line level check");
-        System.out.println(component);
-        System.out.println(type);
-        System.out.println(logData.message);
-
         for ( Rule rule : rulesConfig.rules ) {
             if ( rule.level != RuleLevelEnum.line )
                 continue;
@@ -57,15 +55,11 @@ public class RulesChecker extends TimerTask {
             if ( ! rule.testComponentType(component, type) )
                 continue;
 
-            System.out.println("Should be published");
+            mysqlService.storeAlert(rule.name, component, logData.message);
         }
     }
 
     public void checkTypeLevel(RulesCheckerReport r, String component, String type) {
-        System.out.println("RulesChecker | Got type level check");
-        System.out.println(component);
-        System.out.println(type);
-
         for ( Rule rule : rulesConfig.rules ) {
             if ( rule.level != RuleLevelEnum.type )
                 continue;
@@ -76,14 +70,11 @@ public class RulesChecker extends TimerTask {
             int rate = r.getTypeRate(component, type, rule.rate.interval);
 
             if ( rate >= rule.rate.max )
-                System.out.println("Should be published");
+                mysqlService.storeAlert(rule.name, component, "Rate : " + rate);
         }
     }
 
     public void checkComponentLevel(RulesCheckerReport r, String component) {
-        System.out.println("RulesChecker | Got component level check");
-        System.out.println(component);
-
         for ( Rule rule : rulesConfig.rules ) {
             if ( rule.level != RuleLevelEnum.component )
                 continue;
@@ -94,7 +85,7 @@ public class RulesChecker extends TimerTask {
             int rate = r.getComponentRate(component, rule.rate.interval);
 
             if ( rate >= rule.rate.max )
-                System.out.println("Should be published");
+                mysqlService.storeAlert(rule.name, component, "Rate : " + rate);
         }
     }
 }
