@@ -3,7 +3,7 @@ package org.me.file_ingester.FileReader;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
-import org.me.core.Proxies.KafkaProducerProxy;
+import org.me.core.Services.KafkaProducerService;
 import org.me.file_ingester.LineProcessor.LineProcessor;
 
 import java.io.BufferedReader;
@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class BufferedFileReader extends FileReader {
 
-    public BufferedFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
-        super(lineProcessor, kafkaProducerProxy);
+    public BufferedFileReader(LineProcessor lineProcessor, KafkaProducerService kafkaProducerService) {
+        super(lineProcessor, kafkaProducerService);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BufferedFileReader extends FileReader {
                 LogData logData = lineProcessor.process(line);
                 String key = filenameParts.datetimeString + "--" + logData.date.getTime();
 
-                Future<?> future = kafkaProducerProxy.send(filenameParts.componentName, key, logData);
+                Future<?> future = kafkaProducerService.send(filenameParts.componentName, key, logData);
                 futures.add(future);
             }
 

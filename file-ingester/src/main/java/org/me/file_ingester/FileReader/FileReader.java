@@ -1,6 +1,6 @@
 package org.me.file_ingester.FileReader;
 
-import org.me.core.Proxies.KafkaProducerProxy;
+import org.me.core.Services.KafkaProducerService;
 import org.me.file_ingester.LineProcessor.LineProcessor;
 import org.me.file_ingester.DataObjects.FilenameParts;
 
@@ -12,11 +12,11 @@ public abstract class FileReader implements Runnable {
     protected Path path;
     protected FilenameParts filenameParts;
     protected LineProcessor lineProcessor;
-    protected KafkaProducerProxy kafkaProducerProxy;
+    protected KafkaProducerService kafkaProducerService;
 
-    public FileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
+    public FileReader(LineProcessor lineProcessor, KafkaProducerService kafkaProducerService) {
         this.lineProcessor = lineProcessor;
-        this.kafkaProducerProxy = kafkaProducerProxy;
+        this.kafkaProducerService = kafkaProducerService;
     }
 
     public void setPath(Path path) {

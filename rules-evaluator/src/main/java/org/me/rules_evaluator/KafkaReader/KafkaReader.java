@@ -5,7 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
-import org.me.core.Proxies.KafkaConsumerProxy;
+import org.me.core.Services.KafkaConsumerService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,13 +16,13 @@ public class KafkaReader implements Runnable {
 
     private final String component;
     private final Dotenv dotenv;
-    private final KafkaConsumerProxy kafkaConsumerProxy;
+    private final KafkaConsumerService kafkaConsumerService;
     private final Connection mysqlConnection;
 
     public KafkaReader(String component) {
         this.component = component;
         this.dotenv = Container.get(Dotenv.class);
-        this.kafkaConsumerProxy = KafkaConsumerProxy.factory(component);
+        this.kafkaConsumerService = KafkaConsumerService.factory(component);
         this.mysqlConnection = Container.get(Connection.class);
     }
 
@@ -30,13 +30,13 @@ public class KafkaReader implements Runnable {
     public void run() {
         int pollSize = Integer.parseInt( dotenv.get("KAFKA.CONSUMER.POLL_SIZE", "1000") );
         while (true) {
-            ConsumerRecords<String, LogData> records = kafkaConsumerProxy.poll(pollSize);
+            ConsumerRecords<String, LogData> records = kafkaConsumerService.poll(pollSize);
             try {
                 for ( ConsumerRecord<String, LogData> record : records ) {
                     System.out.println(record.key());
                     storeLogData(record.key(), record.value());
                 }
-                kafkaConsumerProxy.commitSync();
+                kafkaConsumerService.commitSync();
             }
             catch (SQLException e) {
                 System.out.println("SQLException : " + e.getMessage());

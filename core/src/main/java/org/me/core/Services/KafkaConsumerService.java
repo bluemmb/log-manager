@@ -1,4 +1,4 @@
-package org.me.core.Proxies;
+package org.me.core.Services;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -12,14 +12,14 @@ import org.me.core.DataObjects.LogDataDeserializer;
 import java.util.Collections;
 import java.util.Properties;
 
-public class KafkaConsumerProxy {
+public class KafkaConsumerService {
     private KafkaConsumer<String, LogData> kafkaConsumer;
 
-    private KafkaConsumerProxy(KafkaConsumer<String, LogData> kafkaConsumer) {
+    private KafkaConsumerService(KafkaConsumer<String, LogData> kafkaConsumer) {
         this.kafkaConsumer = kafkaConsumer;
     }
 
-    public static KafkaConsumerProxy factory(String topic) {
+    public static KafkaConsumerService factory(String topic) {
         Dotenv dotenv = Container.get(Dotenv.class);
 
         Properties props = new Properties();
@@ -33,7 +33,7 @@ public class KafkaConsumerProxy {
         KafkaConsumer<String, LogData> kafkaConsumer = new KafkaConsumer<>(props);
         kafkaConsumer.subscribe(Collections.singletonList(topic));
 
-        return new KafkaConsumerProxy(kafkaConsumer);
+        return new KafkaConsumerService(kafkaConsumer);
     }
 
     public ConsumerRecords<String, LogData> poll(int duration) {

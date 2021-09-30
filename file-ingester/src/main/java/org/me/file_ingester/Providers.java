@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provides;
 import io.github.cdimascio.dotenv.Dotenv;
 import io.methvin.watcher.DirectoryWatcher;
-import org.me.core.Proxies.KafkaProducerProxy;
+import org.me.core.Services.KafkaProducerService;
 import org.me.file_ingester.FileReader.FileReader;
 import org.me.file_ingester.LineProcessor.LineProcessor;
 import org.me.file_ingester.ThreadsPool.ExecutorServiceThreadsPool;
@@ -33,8 +33,8 @@ public class Providers extends AbstractModule {
 
     @Inject
     @Provides
-    public FileReader providesFileReader(LineProcessor lineProcessor, KafkaProducerProxy kafkaProducerProxy) {
-        return new BufferedFileReader(lineProcessor, kafkaProducerProxy);
+    public FileReader providesFileReader(LineProcessor lineProcessor, KafkaProducerService kafkaProducerService) {
+        return new BufferedFileReader(lineProcessor, kafkaProducerService);
     }
 
     @Provides

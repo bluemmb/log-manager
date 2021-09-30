@@ -11,7 +11,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.me.core.DataObjects.LogData;
 import org.me.core.DataObjects.LogDataSerializer;
 import org.me.core.DataObjects.LogDataTypePartitioner;
-import org.me.core.Proxies.KafkaProducerProxy;
+import org.me.core.Services.KafkaProducerService;
 
 import java.util.Properties;
 
@@ -32,7 +32,7 @@ public class KafkaProvider extends AbstractModule {
     @Inject
     @Provides
     @Singleton
-    public KafkaProducerProxy providesKafkaProducerProxy(KafkaProducer<String, LogData> kafkaProducer) {
-        return new KafkaProducerProxy(kafkaProducer);
+    public KafkaProducerService providesKafkaProducerService(KafkaProducer<String, LogData> kafkaProducer) {
+        return new KafkaProducerService(kafkaProducer);
     }
 }

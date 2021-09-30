@@ -1,4 +1,4 @@
-package org.me.core.Proxies;
+package org.me.core.Services;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -7,10 +7,10 @@ import org.me.core.DataObjects.LogData;
 
 import java.util.concurrent.Future;
 
-public class KafkaProducerProxy {
+public class KafkaProducerService {
     private KafkaProducer<String, LogData> kafkaProducer;
 
-    public KafkaProducerProxy(KafkaProducer<String, LogData> kafkaProducer) {
+    public KafkaProducerService(KafkaProducer<String, LogData> kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
     }
 
