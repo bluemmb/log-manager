@@ -8,9 +8,11 @@ import java.util.Map;
 public class Component {
 
     private final Map<String, Type> types;
+    public final TimedCounter counter;
 
     public Component() {
         this.types = new HashMap<>();
+        this.counter = new TimedCounter();
     }
 
     public void add(LogData logData)
@@ -18,6 +20,10 @@ public class Component {
         if ( ! types.containsKey(logData.type) )
             types.put(logData.type, new Type());
 
-        types.get(logData.type).add(logData);
+        boolean added = types.get(logData.type).add(logData);
+
+        if ( added ) {
+            this.counter.add(logData.date);
+        }
     }
 }

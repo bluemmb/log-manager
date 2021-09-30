@@ -1,9 +1,9 @@
-2021-07-12 01:22:42,114 [Thread1] INFO  package.name.ClassName - Message1 Hi Sophie
-2021-07-12 01:22:48,524 [Thread1] WARNING  package.name.ClassName2  - Message2 What is life?
-2021-07-12 01:23:11,148 [Thread2] ERROR  package.name.ClassName.Subclass -  Message3 Is there any meaning to it?
-2021-07-12 01:23:15,148 [Thread3] INFO  package.name.CLASSX -   Message4 Do you have any purpose?
-2021-07-12 01:23:16,148 [Thread1] DEBUG  package.name.CLASSZ -     Message5 What do you live for ??  !
-2021-07-12 01:24:16,149 [Thread2] DEBUG  package.name.CLASSY - Message6 Do you think about after life?
-2021-07-12 01:24:28,300 [Thread2] DEBUG  package.name.CLASSY - Message7    Is there going to be a new life after this?
-2021-07-12 01:24:30,250 [Thread3] DEBUG  package.name.CLASSXYZ - Message9  I understand if you have doubts.
-2021-07-12 01:24:31,850 [Thread2] DEBUG  package.name.CLASSDONE - Message10 Tell me what's on your mind :)
+2021-09-30 16:45:10,114 [Thread1] INFO  package.name.ClassName - Message1 Hi Sophie
+2021-09-30 16:45:10,115 [Thread1] WARNING  package.name.ClassName2  - Message2 What is life?
+2021-09-30 16:45:10,116 [Thread2] ERROR  package.name.ClassName.Subclass -  Message3 Is there any meaning to it?
+2021-09-30 16:45:10,117 [Thread3] INFO  package.name.CLASSX -   Message4 Do you have any purpose?
+2021-09-30 16:45:10,118 [Thread1] DEBUG  package.name.CLASSZ -     Message5 What do you live for ??  !
+2021-09-30 16:45:10,119 [Thread2] DEBUG  package.name.CLASSY - Message6 Do you think about after life?
+2021-09-30 16:45:10,120 [Thread2] DEBUG  package.name.CLASSY - Message7    Is there going to be a new life after this?
+2021-09-30 16:45:10,121 [Thread3] DEBUG  package.name.CLASSXYZ - Message9  I understand if you have doubts.
+2021-09-30 16:45:10,122 [Thread2] DEBUG  package.name.CLASSDONE - Message10 Tell me what's on your mind :)
