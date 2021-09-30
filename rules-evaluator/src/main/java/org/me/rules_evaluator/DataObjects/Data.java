@@ -20,10 +20,10 @@ public class Data {
         keepMaxMessages = Integer.parseInt( dotenv.get("RULES_EVALUATOR.DATA.KEEP_MAX_MESSAGES") );
     }
 
-    //      TreeMap<Minute, Count  >
+    //            TreeMap<Minute, Count  >
     private final TreeMap<String, Integer> counter;
 
-    //      TreeMap<Time  , Message>
+    //            TreeMap<Time  , Message>
     private final TreeMap<Long  , String > lastMessages;
 
     public Data() {
