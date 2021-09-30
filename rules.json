@@ -1,9 +1,8 @@
-{
-  "rules": [
+[
     {
       "name": "ErrorLog",
-      "for": "line",
-      "on": {
+      "level": "line",
+      "where": {
         "component": "*",
         "type": "ERROR"
       }
@@ -11,8 +10,8 @@
 
     {
       "name": "CriticalLog",
-      "for": "line",
-      "on": {
+      "level": "line",
+      "where": {
         "component": "*",
         "type": "CRITICAL"
       }
@@ -20,12 +19,12 @@
 
     {
       "name": "TooManyLogsOfType",
-      "for": "type",
+      "level": "type",
       "rate": {
         "interval": 5,
         "max": 10
       },
-      "on": {
+      "where": {
         "component": "*",
         "type": "*"
       }
@@ -33,14 +32,13 @@
 
     {
       "name": "TooManyLogsOfComponent",
-      "for": "component",
+      "level": "component",
       "rate": {
         "interval": 2,
         "max": 100
       },
-      "on": {
+      "where": {
         "component": "*"
       }
     }
-  ]
-}
+]
