@@ -7,10 +7,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="core" />
-        <module name="backend" />
+        <module name="api" />
         <module name="rules-evaluator" />
         <module name="file-ingester" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="backend" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

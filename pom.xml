@@ -13,7 +13,7 @@
         <module>core</module>
         <module>file-ingester</module>
         <module>rules-evaluator</module>
-        <module>backend</module>
+        <module>api</module>
     </modules>
 
     <dependencies>
