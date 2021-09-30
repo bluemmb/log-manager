@@ -18,7 +18,7 @@
     },
 
     {
-      "name": "TooManyLogsOfType",
+      "name": "TooManyLogsFromType",
       "level": "type",
       "rate": {
         "interval": 5,
@@ -31,11 +31,11 @@
     },
 
     {
-      "name": "TooManyLogsOfComponent",
+      "name": "TooManyLogsFromComponent",
       "level": "component",
       "rate": {
-        "interval": 2,
-        "max": 100
+        "interval": 1,
+        "max": 10
       },
       "where": {
         "component": "*"

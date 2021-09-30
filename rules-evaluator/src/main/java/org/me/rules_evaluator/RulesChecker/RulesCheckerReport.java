@@ -41,7 +41,7 @@ public class RulesCheckerReport {
     public int sumFromArray(Integer[] counts, int minutes)
     {
         int sum = 0;
-        for ( int i=0 ; i<minutes; i++ ) {
+        for ( int i=0 ; i<=minutes; i++ ) {
             sum += counts[i];
         }
         return sum;
