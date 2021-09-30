@@ -7,20 +7,25 @@ import java.util.Map;
 
 public class Component {
 
+    private final String componentName;
+
     private final Map<String, Type> types;
     public final TimedCounter counter;
 
-    public Component() {
+    public Component(String componentName) {
+        this.componentName = componentName;
         this.types = new HashMap<>();
         this.counter = new TimedCounter();
     }
 
     public void add(LogData logData)
     {
-        if ( ! types.containsKey(logData.type) )
-            types.put(logData.type, new Type());
+        String type = logData.type;
 
-        boolean added = types.get(logData.type).add(logData);
+        if ( ! types.containsKey(type) )
+            types.put(type, new Type(componentName, type));
+
+        boolean added = types.get(type).add(logData);
 
         if ( added ) {
             this.counter.add(logData.date);

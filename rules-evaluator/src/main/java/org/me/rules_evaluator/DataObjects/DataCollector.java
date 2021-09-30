@@ -15,9 +15,11 @@ public class DataCollector {
 
     public void add(LogData logData)
     {
-        if ( ! components.containsKey(logData.componentName) )
-            components.put(logData.componentName, new Component());
+        String componentName = logData.componentName;
 
-        components.get(logData.componentName).add(logData);
+        if ( ! components.containsKey(componentName) )
+            components.put(componentName, new Component(componentName));
+
+        components.get(componentName).add(logData);
     }
 }
