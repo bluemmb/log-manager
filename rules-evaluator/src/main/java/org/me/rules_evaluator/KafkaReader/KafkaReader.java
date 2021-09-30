@@ -6,42 +6,32 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 import org.me.core.Services.KafkaConsumerService;
-import org.me.core.Services.MysqlService;
-
-import java.sql.SQLException;
+import org.me.rules_evaluator.DataObjects.DataCollector;
 
 public class KafkaReader implements Runnable {
 
     private final String component;
     private final Dotenv dotenv;
     private final KafkaConsumerService kafkaConsumerService;
-    private final MysqlService mysqlService;
+    private final DataCollector dataCollector;
 
     public KafkaReader(String component) {
         this.component = component;
         this.dotenv = Container.get(Dotenv.class);
         this.kafkaConsumerService = KafkaConsumerService.factory(component);
-        this.mysqlService = Container.get(MysqlService.class);
+        this.dataCollector = new DataCollector();
     }
 
     @Override
     public void run() {
-        int pollSize = Integer.parseInt( dotenv.get("KAFKA.CONSUMER.POLL_SIZE", "1000") );
+        int pollSize = Integer.parseInt( dotenv.get("KAFKA.CONSUMER.POLL_SIZE") );
         while (true) {
             ConsumerRecords<String, LogData> records = kafkaConsumerService.poll(pollSize);
-            try {
-                for ( ConsumerRecord<String, LogData> record : records ) {
-                    System.out.println(record.key());
-                    mysqlService.storeLogData(component, record.key(), record.value());
-                }
-                kafkaConsumerService.commitSync();
+            for ( ConsumerRecord<String, LogData> record : records ) {
+                System.out.println(record.key());
+                dataCollector.add(component, record.value());
             }
-            catch (SQLException e) {
-                System.out.println("SQLException : " + e.getMessage());
-            }
-            catch (Exception e) {
-                System.out.println("Database Error : " + e.getMessage());
-            }
+            kafkaConsumerService.commitSync();
         }
     }
 }
