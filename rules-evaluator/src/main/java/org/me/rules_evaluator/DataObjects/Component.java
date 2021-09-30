@@ -9,7 +9,7 @@ public class Component {
 
     private final String componentName;
 
-    private final Map<String, Type> types;
+    public final Map<String, Type> types;
     public final TimedCounter counter;
 
     public Component(String componentName) {

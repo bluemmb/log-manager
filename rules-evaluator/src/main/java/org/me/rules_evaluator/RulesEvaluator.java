@@ -32,6 +32,6 @@ public class RulesEvaluator {
 
     private void startRulesChecker() {
         Timer timer = new Timer();
-        timer.scheduleAtFixedRate(rulesChecker, 1000, 1000);
+        timer.scheduleAtFixedRate(rulesChecker, 30 * 1000, 30 * 1000);
     }
 }
