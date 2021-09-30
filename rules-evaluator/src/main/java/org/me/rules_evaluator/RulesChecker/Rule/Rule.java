@@ -3,10 +3,10 @@ package org.me.rules_evaluator.RulesChecker.Rule;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Rule {
-    private String name;
-    private RuleLevelEnum level;
-    private RuleRate rate;
-    private RuleWhere where;
+    public String name;
+    public RuleLevelEnum level;
+    public RuleRate rate;
+    public RuleWhere where;
 
     public Rule(
             @JsonProperty("name") String name,
@@ -18,5 +18,13 @@ public class Rule {
         this.level = level;
         this.rate = rate;
         this.where = where;
+    }
+
+    public boolean testComponent(String component) {
+        return where.testComponent(component);
+    }
+
+    public boolean testComponentType(String component, String type) {
+        return where.testComponentType(component, type);
     }
 }

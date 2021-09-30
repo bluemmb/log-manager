@@ -13,7 +13,7 @@ import java.util.List;
 public class RulesConfig {
 
     private Dotenv dotenv;
-    private final List<Rule> rules;
+    public final List<Rule> rules;
 
     @Inject
     public RulesConfig(Dotenv dotenv) {
