@@ -4,7 +4,7 @@ CREATE TABLE `logs`
     `key`        varchar(40) NOT NULL ,
     `component`  varchar(20) NOT NULL ,
     `logdatetime`   datetime(3) NULL ,
-    `type`       enum('debug', 'info', 'warning', 'error', 'critical') NULL ,
+    `type`       varchar(30) NULL ,
     `threadName` varchar(20) NULL ,
     `className`  varchar(200) NULL ,
     `message`    text NULL ,

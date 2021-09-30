@@ -29,7 +29,7 @@ public class MysqlService {
         prepareStatement.setString(2, component);
 
         prepareStatement.setString(3, dateFormat.format(logData.date));
-        prepareStatement.setString(4, logData.type.toString());
+        prepareStatement.setString(4, logData.type);
         prepareStatement.setString(5, logData.threadName);
         prepareStatement.setString(6, logData.className);
         prepareStatement.setString(7, logData.message);

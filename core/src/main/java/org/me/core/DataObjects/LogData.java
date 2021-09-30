@@ -8,7 +8,7 @@ import java.util.Objects;
 public class LogData {
     public Date date;
     public String threadName;
-    public LogDataType type;
+    public String type;
     public String className;
     public String message;
 
@@ -21,7 +21,7 @@ public class LogData {
     ) {
         this.date = date;
         this.threadName = threadName;
-        this.type = LogDataType.valueOf(type);
+        this.type = type;
         this.className = className;
         this.message = message;
     }
