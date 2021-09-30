@@ -7,7 +7,6 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,10 +20,13 @@ public class Api extends HttpServlet {
         // PrintWriter out = response.getWriter();
 
         try {
+            int limit = parseToInt(request.getParameter("limit"), 10);
+
             Connection connection = DatabaseConnection.getConnection();
 
-            String query = "SELECT * from alerts";
+            String query = "SELECT * from alerts order by id desc limit ?";
             PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, limit);
 
             ResultSet rs = ps.executeQuery();
             List<Alert> alerts = new ArrayList<>();
@@ -49,6 +51,14 @@ public class Api extends HttpServlet {
             ps.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static int parseToInt(String stringToParse, int defaultValue) {
+        try {
+            return Integer.parseInt(stringToParse);
+        } catch(NumberFormatException ex) {
+            return defaultValue;
         }
     }
 }
