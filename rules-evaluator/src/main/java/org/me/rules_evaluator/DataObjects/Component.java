@@ -10,12 +10,10 @@ public class Component {
     private final String componentName;
 
     public final Map<String, Type> types;
-    public final TimedCounter counter;
 
     public Component(String componentName) {
         this.componentName = componentName;
         this.types = new HashMap<>();
-        this.counter = new TimedCounter();
     }
 
     public void add(LogData logData)
@@ -25,10 +23,6 @@ public class Component {
         if ( ! types.containsKey(type) )
             types.put(type, new Type(componentName, type));
 
-        boolean added = types.get(type).add(logData);
-
-        if ( added ) {
-            this.counter.add(logData.date);
-        }
+        types.get(type).add(logData);
     }
 }
