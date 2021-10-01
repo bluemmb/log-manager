@@ -1,25 +1,36 @@
 package org.me.rules_evaluator.DataObjects;
 
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.TreeMap;
 
 public class TimedCounter {
 
+    private final int keepMaxMinutes;
     public final TreeMap<String, Integer> counter;
 
-    public TimedCounter() {
-        this.counter = new TreeMap<>();
+    public TimedCounter(int keepMaxMinutes) {
+        this.counter = new TreeMap<>(Collections.reverseOrder());
+        this.keepMaxMinutes = keepMaxMinutes;
     }
 
     public void add(Date date) {
         String key = generateKey(date);
         counter.merge(key, 1, Integer::sum);
+        checkSize();
     }
 
     private String generateKey(Date date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         return dateFormat.format(date);
+    }
+
+    private void checkSize() {
+        // TODO: This is not generally correct but works for current project usage
+        while ( counter.size() > keepMaxMinutes ) {
+            counter.pollLastEntry();
+        }
     }
 
     public Integer[] reportCounts(Integer maxMinutes, Date from) {

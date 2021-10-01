@@ -9,10 +9,12 @@ import java.util.Date;
 
 public class Type {
 
+    private static final int keepMaxMinutes;
     private static final int keepMaxMessages;
 
     static {
         Dotenv dotenv = Container.get(Dotenv.class);
+        keepMaxMinutes = Integer.parseInt( dotenv.get("RULES_EVALUATOR.DATA.KEEP_MAX_MINUTES") );
         keepMaxMessages = Integer.parseInt( dotenv.get("RULES_EVALUATOR.DATA.KEEP_MAX_MESSAGES") );
     }
 
@@ -27,7 +29,7 @@ public class Type {
     public Type(String componentName, String typeName) {
         this.componentName = componentName;
         this.typeName = typeName;
-        this.counter = new TimedCounter();
+        this.counter = new TimedCounter(keepMaxMinutes);
         this.lastMessages = new FixedSizeStack(keepMaxMessages);
         this.rulesChecker = Container.get(RulesChecker.class);
     }
