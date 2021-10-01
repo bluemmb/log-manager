@@ -18,7 +18,7 @@ public class TestFixedFormatLineProcessor {
     public void testProcessResultParts(String componentName, String line, LogData logDataExpected) {
         FixedFormatLineProcessor fixedFormatLineProcessor = new FixedFormatLineProcessor();
         LogData logData = fixedFormatLineProcessor.process(componentName, line);
-        assertEquals(logData, logDataExpected);
+        assertEquals(logDataExpected, logData);
     }
 
     static Stream<Arguments> paramsProcessResultParts() {

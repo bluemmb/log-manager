@@ -34,7 +34,7 @@ public class LogData {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LogData logData = (LogData) o;
-        return componentName.equals(logData.className) && date.equals(logData.date) && threadName.equals(logData.threadName) && type.equals(logData.type) && className.equals(logData.className) && message.equals(logData.message);
+        return componentName.equals(logData.componentName) && date.equals(logData.date) && threadName.equals(logData.threadName) && type.equals(logData.type) && className.equals(logData.className) && message.equals(logData.message);
     }
 
     @Override
