@@ -12,7 +12,7 @@ public class Container {
         this.injector = injector;
     }
 
-    static void build(Injector injector) {
+    public static void build(Injector injector) {
         instance = new Container(injector);
     }
 
