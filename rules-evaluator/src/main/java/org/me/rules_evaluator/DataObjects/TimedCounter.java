@@ -22,14 +22,18 @@ public class TimedCounter {
         return dateFormat.format(date);
     }
 
-    public Integer[] reportCounts(Integer maxMinutes) {
+    public Integer[] reportCounts(Integer maxMinutes, Date from) {
         Integer[] counts = new Integer[maxMinutes];
-        Date now = new Date();
         for ( int i=0 ; i<maxMinutes ; i++ ) {
-            Date d = new Date(now.getTime() - (i * 60L * 1000L));
+            Date d = new Date(from.getTime() - (i * 60L * 1000L));
             String key = generateKey(d);
             counts[i] = counter.getOrDefault(key, 0);
         }
         return counts;
+    }
+
+    public Integer[] reportCounts(Integer maxMinutes) {
+        Date now = new Date();
+        return reportCounts(maxMinutes, now);
     }
 }
