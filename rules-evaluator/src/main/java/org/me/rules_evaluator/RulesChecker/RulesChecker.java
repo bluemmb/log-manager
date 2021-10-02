@@ -9,8 +9,8 @@ import org.me.rules_evaluator.DataObjects.DataCollector;
 import org.me.rules_evaluator.RulesChecker.Rule.Rule;
 import org.me.rules_evaluator.RulesChecker.Rule.RuleLevelEnum;
 
-import java.util.Set;
-import java.util.TimerTask;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class RulesChecker extends TimerTask {
 
@@ -24,12 +24,14 @@ public class RulesChecker extends TimerTask {
     private final RulesConfig rulesConfig;
     private final DataCollector dataCollector;
     private final MysqlService mysqlService;
+    private final Map<String, Date> reportedRules;
 
     @Inject
     public RulesChecker(RulesConfig rulesConfig, DataCollector dataCollector, MysqlService mysqlService) {
         this.rulesConfig = rulesConfig;
         this.dataCollector = dataCollector;
         this.mysqlService = mysqlService;
+        this.reportedRules = new HashMap<>();
     }
 
     @Override
@@ -47,6 +49,7 @@ public class RulesChecker extends TimerTask {
         }
     }
 
+
     public void checkLineLevel(String component, String type, LogData logData) {
         for ( Rule rule : rulesConfig.rules ) {
             if ( rule.level != RuleLevelEnum.line )
@@ -55,10 +58,12 @@ public class RulesChecker extends TimerTask {
             if ( ! rule.testComponentType(component, type) )
                 continue;
 
-            mysqlService.storeAlert(rule.name, component, logData.message);
-            System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
+            if ( publish(rule, component, logData.message) ) {
+                System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
+            }
         }
     }
+
 
     public void checkTypeLevel(RulesCheckerReport r, String component, String type) {
         for ( Rule rule : rulesConfig.rules ) {
@@ -78,11 +83,13 @@ public class RulesChecker extends TimerTask {
                         "Rate: " + rate + " log/minute\n" +
                         "LatestMessages: \n" + String.join("\n", messages) + "\n";
 
-                mysqlService.storeAlert(rule.name, component, description);
-                System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
+                if ( checkedPublish(rule, component, type, description, rule.rate.interval) ) {
+                    System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
+                }
             }
         }
     }
+
 
     public void checkComponentLevel(RulesCheckerReport r, String component) {
         for ( Rule rule : rulesConfig.rules ) {
@@ -97,9 +104,45 @@ public class RulesChecker extends TimerTask {
             if ( rate >= rule.rate.max ) {
                 String description = "Rate: " + rate + " log/minute\n";
 
-                mysqlService.storeAlert(rule.name, component, description);
-                System.out.println("Created Alert : " + rule.name + " [component=" + component + "]");
+                if ( checkedPublish(rule, component, null, description, rule.rate.interval) ) {
+                    System.out.println("Created Alert : " + rule.name + " [component=" + component + "]");
+                }
             }
         }
+    }
+
+
+    private boolean checkedPublish(Rule rule, String component, String type, String description, int maxMinutes) {
+        String hash = generateHash(rule, component, type);
+        Date now = new Date();
+        if ( isRecentlyPublished(hash, now, maxMinutes) )
+            return false;
+
+        boolean published = publish(rule, component, description);
+        if ( published )
+            reportedRules.put(hash, now);
+
+        return published;
+    }
+
+
+    private boolean publish(Rule rule, String component, String description) {
+        return mysqlService.storeAlert(rule.name, component, description);
+    }
+
+
+    private String generateHash(Rule rule, String component, String type) {
+        return rule.name + "|" + component + (type != null ? "|" + type : "");
+    }
+
+
+    private boolean isRecentlyPublished(String hash, Date now, int maxMinutes) {
+        if ( ! reportedRules.containsKey(hash) )
+            return false;
+
+        Date publishedDate = reportedRules.get(hash);
+        long duration  = now.getTime() - publishedDate.getTime();
+        long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(duration);
+        return diffInMinutes <= maxMinutes;
     }
 }

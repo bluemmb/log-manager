@@ -12,7 +12,7 @@ public class MysqlService {
         this.connection = connection;
     }
 
-    public void storeAlert(String ruleName, String component, String description) {
+    public boolean storeAlert(String ruleName, String component, String description) {
         try {
             PreparedStatement prepareStatement = connection.prepareStatement(
                     "insert into alerts (`ruleName`, `component`, `description`, `created_at`)" +
@@ -27,9 +27,11 @@ public class MysqlService {
             prepareStatement.setString(4, dateFormat.format(new java.util.Date()));
 
             prepareStatement.executeUpdate();
+            return true;
         }
         catch (Exception e) {
             System.out.println("Database Error : " + e.getMessage());
+            return false;
         }
     }
 }
