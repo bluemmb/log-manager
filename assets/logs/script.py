@@ -5,17 +5,20 @@ import random
 import os
 
 parser = argparse.ArgumentParser("log generator")
-parser.add_argument("-m", "--minutes", help="", type=int, default=1)
+parser.add_argument("-m", "--minutes_from", help="", type=int, default=1)
+parser.add_argument("-t", "--minutes_to", help="", type=int, default=0)
 parser.add_argument("-c", "--count", help="", type=int, default=10)
 parser.add_argument("-C", "--component", help="", type=str, default="*")
 parser.add_argument("-T", "--type", help="", type=str, default="*")
 args = parser.parse_args()
 
 def main():
-    start_time = datetime.datetime.now() - datetime.timedelta(minutes=args.minutes)
-    interval = (args.minutes * 60 * 1000) / args.count
+    now = datetime.datetime.now().replace(second=0, microsecond=0)
+    start_time = now - datetime.timedelta(minutes=args.minutes_from)
+    end_time = now - datetime.timedelta(minutes=args.minutes_to)
+    interval = ((args.minutes_from - args.minutes_to) * 60 * 1000) / args.count
 
-    file = filename()
+    file = filename(end_time)
     source = os.path.dirname(os.path.abspath(__file__)) + "/temp/" + file
     destination = os.path.dirname(os.path.abspath(__file__)) + "/files/" + file
 
@@ -28,8 +31,8 @@ def main():
     os.rename(source, destination)
 
 
-def filename():
-    return '{0}-{1}.log'.format(component(), datetime.datetime.now().strftime('%Y_%m_%d-%H_%M_%S'))
+def filename(time):
+    return '{0}-{1}.log'.format(component(), time.strftime('%Y_%m_%d-%H_%M_%S'))
 
 
 def formatted_time(time):
