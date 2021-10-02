@@ -1,23 +1,19 @@
 package org.me.rules_evaluator.RulesChecker;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import org.me.core.Container;
-
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class RulesCheckerReport {
-    private static final int keepMaxMinutes;
-
-    static {
-        Dotenv dotenv = Container.get(Dotenv.class);
-        keepMaxMinutes = Integer.parseInt( dotenv.get("RULES_EVALUATOR.DATA.KEEP_MAX_MINUTES") );
-    }
 
     //     <component, <type, counts>>
+    public int maxMinutes;
     public HashMap<String   , HashMap<String, Integer[]>> report;
+    public HashMap<String, Integer[]> reportComponents;
 
-    public RulesCheckerReport() {
+    public RulesCheckerReport(int maxMinutes) {
         this.report = new HashMap<>();
+        this.reportComponents = new HashMap<>();
+        this.maxMinutes = maxMinutes;
     }
 
     public void addComponent(String componentName) {
@@ -28,59 +24,72 @@ public class RulesCheckerReport {
         report.get(componentName).put(typeName, reportCounts);
     }
 
+    public void finish() {
+        report.forEach( (componentName, component) -> {
+            Integer[] componentCounts = new Integer[maxMinutes];
+            Arrays.fill(componentCounts, 0);
+            component.forEach( (typeName, counts) -> {
+                componentCounts[0] += counts[0];
+                for (int i=1 ; i<maxMinutes ; i++) {
+                    counts[i] += counts[i-1];
+                    componentCounts[i] += counts[i];
+                }
+            } );
+            reportComponents.put(componentName, componentCounts);
+        });
+    }
+
+
     public int getTypeRate(String componentName, String typeName, int minutes) {
         Integer[] counts = report.get(componentName).get(typeName);
-        return rateFromArray(counts, minutes, 0);
+        return rateFromArray(counts, minutes+1, 0);
     }
+
 
     public int getTypeMaxRate(String componentName, String typeName, int minutes) {
         Integer[] counts = report.get(componentName).get(typeName);
-        int maxRate = 0;
-        for ( int i=0 ; i<=Math.max(0, keepMaxMinutes-minutes) ; i++ ) {
-            // TODO: Can be optimized
-            int rate = sumFromArray(counts, minutes, i) / minutes;
-            maxRate = Math.max(maxRate, rate);
-        }
-        return maxRate;
+        return maxRateFromArray(counts, minutes+1);
     }
+
 
     public int getComponentRate(String componentName, int minutes) {
-        HashMap<String, Integer[]> component = report.get(componentName);
-        int sum = 0;
-        for ( Integer[] counts : component.values() ) {
-            sum += sumFromArray(counts, minutes, 0);
-        }
-        return sum / minutes;
+        Integer[] counts = reportComponents.get(componentName);
+        return rateFromArray(counts, minutes+1, 0);
     }
 
+
     public int getComponentMaxRate(String componentName, int minutes) {
-        HashMap<String, Integer[]> component = report.get(componentName);
+        Integer[] counts = reportComponents.get(componentName);
+        return maxRateFromArray(counts, minutes+1);
+    }
+
+
+    public int maxRateFromArray(Integer[] counts, int minutes)
+    {
         int maxRate = 0;
-        for ( int i=0 ; i<=Math.max(0, keepMaxMinutes-minutes) ; i++ ) {
-            int sum = 0;
-            for (Integer[] counts : component.values()) {
-                sum += sumFromArray(counts, minutes, i);
-            }
-            int rate = sum / minutes;
-            maxRate = Math.max(maxRate, rate);
+        int len = counts.length;
+
+        for ( int i=0 ; i<len ; i++ ) {
+            maxRate = Math.max(maxRate, rateFromArray(counts, minutes, i));
         }
+
         return maxRate;
     }
 
-    private int rateFromArray(Integer[] counts, int minutes, int skip)
+
+    public int rateFromArray(Integer[] counts, int minutes, int skip)
     {
         int sum = sumFromArray(counts, minutes, skip);
         return sum / minutes;
     }
 
-    private int sumFromArray(Integer[] counts, int minutes, int skip)
+
+    public int sumFromArray(Integer[] counts, int minutes, int skip)
     {
-        int sum = 0;
-        int start = Math.min(skip, counts.length-1);
-        int end = Math.min(skip+minutes, counts.length-1);
-        for ( int i=start ; i<=end; i++ ) {
-            sum += counts[i];
-        }
-        return sum;
+        int start = Math.max(0, skip);
+        int end = Math.min(skip+minutes-1, counts.length-1);
+        if ( end < start ) return 0;
+        if ( end >= maxMinutes ) return 0;
+        return counts[end] - (start == 0 ? 0 : counts[start-1]);
     }
 }

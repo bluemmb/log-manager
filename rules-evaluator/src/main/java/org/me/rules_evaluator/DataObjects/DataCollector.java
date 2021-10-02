@@ -1,5 +1,7 @@
 package org.me.rules_evaluator.DataObjects;
 
+import io.github.cdimascio.dotenv.Dotenv;
+import org.me.core.Container;
 import org.me.core.DataObjects.LogData;
 import org.me.rules_evaluator.RulesChecker.RulesCheckerReport;
 
@@ -7,6 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataCollector {
+    private static final int keepMaxMinutes;
+
+    static {
+        Dotenv dotenv = Container.get(Dotenv.class);
+        keepMaxMinutes = Integer.parseInt( dotenv.get("RULES_EVALUATOR.DATA.KEEP_MAX_MINUTES") );
+    }
 
     private final Map<String, Component> components;
 
@@ -25,13 +33,14 @@ public class DataCollector {
     }
 
     public synchronized RulesCheckerReport reportToRulesChecker(int maxMinutes) {
-        RulesCheckerReport rulesCheckerReport = new RulesCheckerReport();
+        RulesCheckerReport rulesCheckerReport = new RulesCheckerReport(keepMaxMinutes);
         components.forEach( (componentName, component) -> {
             rulesCheckerReport.addComponent(componentName);
             component.types.forEach( (typeName, type) -> {
                 rulesCheckerReport.addTypeReport(componentName, typeName, type.counter.reportCounts(maxMinutes));
             } );
         } );
+        rulesCheckerReport.finish();
         return rulesCheckerReport;
     }
 
