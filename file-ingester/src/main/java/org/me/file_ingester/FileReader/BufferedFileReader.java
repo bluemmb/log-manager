@@ -36,7 +36,7 @@ public class BufferedFileReader extends FileReader {
                 // System.out.println("Ingester | Line : " + line);
 
                 LogData logData = lineProcessor.process(filenameParts.componentName, line);
-                String key = filenameParts.datetimeString + "--" + logData.date.getTime();
+                String key = filenameParts.componentName + " -- " + filenameParts.datetimeString + " : " + logData.date.getTime();
 
                 Future<?> future = kafkaProducerService.send(key, logData);
                 futures.add(future);
