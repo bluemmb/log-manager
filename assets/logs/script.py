@@ -15,15 +15,21 @@ def main():
     start_time = datetime.datetime.now() - datetime.timedelta(minutes=args.minutes)
     interval = (args.minutes * 60 * 1000) / args.count
 
-    with open(filename(), 'w') as f:
+    file = filename()
+    source = os.path.dirname(os.path.abspath(__file__)) + "/temp/" + file
+    destination = os.path.dirname(os.path.abspath(__file__)) + "/files/" + file
+
+    with open(source, 'w') as f:
         for i in range(args.count):
             time = start_time + datetime.timedelta(milliseconds=i * interval)
             log = '{0} [{1}] {2} {3} - {4}'.format( formatted_time(time), thread(), type(), class_name(), message() )
             f.write("%s\n" % log)
 
+    os.rename(source, destination)
+
 
 def filename():
-    return os.path.dirname(os.path.abspath(__file__)) + '/{0}-{1}.log'.format(component(), datetime.datetime.now().strftime('%Y_%m_%d-%H_%M_%S'))
+    return '{0}-{1}.log'.format(component(), datetime.datetime.now().strftime('%Y_%m_%d-%H_%M_%S'))
 
 
 def formatted_time(time):
