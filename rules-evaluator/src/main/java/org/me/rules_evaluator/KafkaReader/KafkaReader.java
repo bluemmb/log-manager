@@ -33,4 +33,8 @@ public class KafkaReader implements Runnable {
             kafkaConsumerService.commitSync();
         }
     }
+
+    public void close() {
+        kafkaConsumerService.close();
+    }
 }

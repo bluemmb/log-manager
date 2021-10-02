@@ -1,6 +1,7 @@
 package org.me.rules_evaluator;
 
 import com.google.inject.Inject;
+import org.me.core.Services.KafkaConsumerService;
 import org.me.rules_evaluator.KafkaReader.KafkaReader;
 import org.me.rules_evaluator.RulesChecker.RulesChecker;
 
@@ -23,6 +24,8 @@ public class RulesEvaluator {
 
         System.out.println("Enter something to finish App!");
         System.in.read();
+
+        kafkaReader.close();
     }
 
     private void startKafkaReader() {

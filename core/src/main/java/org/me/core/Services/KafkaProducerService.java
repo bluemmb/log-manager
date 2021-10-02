@@ -28,4 +28,8 @@ public class KafkaProducerService {
             return null;
         }
     }
+
+    public void close() {
+        kafkaProducer.close();
+    }
 }

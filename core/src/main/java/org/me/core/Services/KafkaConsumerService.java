@@ -18,4 +18,8 @@ public class KafkaConsumerService {
     public void commitSync() {
         kafkaConsumer.commitSync();
     }
+
+    public void close() {
+        kafkaConsumer.close();
+    }
 }
