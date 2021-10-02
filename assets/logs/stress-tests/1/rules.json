@@ -1,0 +1,62 @@
+[
+  {
+    "name": "TooManyLogsFromType1",
+    "level": "type",
+    "rate": {
+      "interval": 5,
+      "max": 10
+    },
+    "where": {
+      "component": "*",
+      "type": "*"
+    }
+  },
+  {
+    "name": "TooManyLogsFromType2",
+    "level": "type",
+    "rate": {
+      "interval": 5,
+      "max": 10
+    },
+    "where": {
+      "component": "*",
+      "type": "*"
+    }
+  },
+  {
+    "name": "TooManyLogsFromType3",
+    "level": "type",
+    "rate": {
+      "interval": 5,
+      "max": 10
+    },
+    "where": {
+      "component": "*",
+      "type": "*"
+    }
+  },
+  {
+    "name": "TooManyLogsFromType4",
+    "level": "type",
+    "rate": {
+      "interval": 5,
+      "max": 10
+    },
+    "where": {
+      "component": "*",
+      "type": "*"
+    }
+  },
+  {
+    "name": "TooManyLogsFromType5",
+    "level": "type",
+    "rate": {
+      "interval": 5,
+      "max": 10
+    },
+    "where": {
+      "component": "*",
+      "type": "*"
+    }
+  }
+]
