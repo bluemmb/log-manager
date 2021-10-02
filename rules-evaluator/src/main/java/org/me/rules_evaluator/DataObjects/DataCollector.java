@@ -34,4 +34,8 @@ public class DataCollector {
         } );
         return rulesCheckerReport;
     }
+
+    public String[] getLatestMessages(String component, String type, int maxCount) {
+        return components.get(component).types.get(type).lastMessages.read(maxCount);
+    }
 }

@@ -16,17 +16,17 @@ public class FixedSizeStack {
         return maxSize;
     }
 
-    public int getSize() {
+    public synchronized int getSize() {
         return size;
     }
 
-    public void push(String element) {
+    public synchronized void push(String element) {
         array[index] = element;
         moveIndex();
         addToSize();
     }
 
-    public String[] read(int maxCount) {
+    public synchronized String[] read(int maxCount) {
         maxCount = Math.min(maxCount, size);
         String[] result = new String[maxCount];
         for ( int i=0, pos=index ; i<maxCount ; i++ ) {

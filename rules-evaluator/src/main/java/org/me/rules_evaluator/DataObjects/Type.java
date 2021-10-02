@@ -22,7 +22,7 @@ public class Type {
     private final String typeName;
 
     public final TimedCounter counter;
-    private final FixedSizeStack lastMessages;
+    public final FixedSizeStack lastMessages;
     private Date latestDate;
     private final RulesChecker rulesChecker;
 

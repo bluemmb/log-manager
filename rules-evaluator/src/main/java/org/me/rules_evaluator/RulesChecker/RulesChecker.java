@@ -56,6 +56,7 @@ public class RulesChecker extends TimerTask {
                 continue;
 
             mysqlService.storeAlert(rule.name, component, logData.message);
+            System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
         }
     }
 
@@ -69,8 +70,17 @@ public class RulesChecker extends TimerTask {
 
             int rate = r.getTypeRate(component, type, rule.rate.interval);
 
-            if ( rate >= rule.rate.max )
-                mysqlService.storeAlert(rule.name, component, "Rate : " + rate);
+            if ( rate >= rule.rate.max ) {
+                String[] messages = dataCollector.getLatestMessages(component, type, 3);
+
+                String description =
+                        "Type: " + type + "\n" +
+                        "Rate: " + rate + " log/minute\n" +
+                        "LatestMessages: \n" + String.join("\n", messages) + "\n";
+
+                mysqlService.storeAlert(rule.name, component, description);
+                System.out.println("Created Alert : " + rule.name + " [component=" + component + "]" + " [type=" + type + "]");
+            }
         }
     }
 
@@ -84,8 +94,12 @@ public class RulesChecker extends TimerTask {
 
             int rate = r.getComponentRate(component, rule.rate.interval);
 
-            if ( rate >= rule.rate.max )
-                mysqlService.storeAlert(rule.name, component, "Rate : " + rate);
+            if ( rate >= rule.rate.max ) {
+                String description = "Rate: " + rate + " log/minute\n";
+
+                mysqlService.storeAlert(rule.name, component, description);
+                System.out.println("Created Alert : " + rule.name + " [component=" + component + "]");
+            }
         }
     }
 }
