@@ -34,7 +34,7 @@
       "name": "TooManyLogsFromComponent",
       "level": "component",
       "rate": {
-        "interval": 1,
+        "interval": 3,
         "max": 10
       },
       "where": {

@@ -25,6 +25,7 @@ public class RulesChecker extends TimerTask {
     private final DataCollector dataCollector;
     private final MysqlService mysqlService;
     private final Map<String, Date> reportedRules;
+    private final Set<String> fullChecked;
 
     @Inject
     public RulesChecker(RulesConfig rulesConfig, DataCollector dataCollector, MysqlService mysqlService) {
@@ -32,6 +33,7 @@ public class RulesChecker extends TimerTask {
         this.dataCollector = dataCollector;
         this.mysqlService = mysqlService;
         this.reportedRules = new HashMap<>();
+        this.fullChecked = new HashSet<>();
     }
 
     @Override
@@ -73,7 +75,11 @@ public class RulesChecker extends TimerTask {
             if ( ! rule.testComponentType(component, type) )
                 continue;
 
-            int rate = r.getTypeRate(component, type, rule.rate.interval);
+            int rate = 0;
+            if ( isFullCheckedBefore(rule, component, type) )
+                rate = r.getTypeRate(component, type, rule.rate.interval);
+            else
+                rate = r.getTypeMaxRate(component, type, rule.rate.interval);
 
             if ( rate >= rule.rate.max ) {
                 String[] messages = dataCollector.getLatestMessages(component, type, 3);
@@ -99,7 +105,11 @@ public class RulesChecker extends TimerTask {
             if ( ! rule.testComponent(component) )
                 continue;
 
-            int rate = r.getComponentRate(component, rule.rate.interval);
+            int rate = 0;
+            if ( isFullCheckedBefore(rule, component, null) )
+                rate = r.getComponentRate(component, rule.rate.interval);
+            else
+                rate = r.getComponentMaxRate(component, rule.rate.interval);
 
             if ( rate >= rule.rate.max ) {
                 String description = "Rate: " + rate + " log/minute\n";
@@ -113,16 +123,18 @@ public class RulesChecker extends TimerTask {
 
 
     private boolean checkedPublish(Rule rule, String component, String type, String description, int maxMinutes) {
-        String hash = generateHash(rule, component, type);
-        Date now = new Date();
-        if ( isRecentlyPublished(hash, now, maxMinutes) )
-            return false;
+        synchronized ( reportedRules ) {
+            String hash = generateHash(rule, component, type);
+            Date now = new Date();
+            if (isRecentlyPublished(hash, now, maxMinutes))
+                return false;
 
-        boolean published = publish(rule, component, description);
-        if ( published )
-            reportedRules.put(hash, now);
+            boolean published = publish(rule, component, description);
+            if (published)
+                reportedRules.put(hash, now);
 
-        return published;
+            return published;
+        }
     }
 
 
@@ -144,5 +156,15 @@ public class RulesChecker extends TimerTask {
         long duration  = now.getTime() - publishedDate.getTime();
         long diffInMinutes = TimeUnit.MILLISECONDS.toMinutes(duration);
         return diffInMinutes <= maxMinutes;
+    }
+
+
+    private boolean isFullCheckedBefore(Rule rule, String component, String type) {
+        synchronized ( fullChecked ) {
+            String hash = generateHash(rule, component, type);
+            boolean checked = fullChecked.contains(hash);
+            if (!checked) fullChecked.add(hash);
+            return checked;
+        }
     }
 }
